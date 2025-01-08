@@ -8,6 +8,7 @@
 #include <taglib/fileref.h>
 #include <taglib/tag.h>
 
+// genre enums
 enum Genre
 {
     MUSIC       = 0  ,
@@ -22,6 +23,7 @@ enum Genre
 
 };
 
+// sort filters
 enum SORT_FILTER
 {
     MUSIC_TITLE = 0 ,
@@ -35,8 +37,8 @@ public:
     std::string path;
     std::string song_name;
     std::string artist;
-    Genre genre;
-    int time;
+    Genre genre; // music genre
+    int time; // audio duration (music len) in second
     bool paused = true;
 
     Song( std::string path , std::string song_name , std::string artist , Genre genre);

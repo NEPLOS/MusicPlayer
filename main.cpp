@@ -63,7 +63,6 @@ static LfTexture muteIcon;
 static LfTexture shuffleIcon;
 static LfTexture loopIcon;
 static LfTexture loopOneIcon;
-//static LfTexture muteIcon;
 
 Node* playing_song = nullptr;
 
@@ -90,7 +89,7 @@ static bool loop_type = ONE_MUSIC;
 static bool should_i_pause_or_unpause_the_music = true;
 static bool should_i_mute_or_unmute_the_music = true;
 
-
+// get the music Genre from a path
 std::string GetMusicGenre(std::string path)
 {
     TagLib::FileRef file(path.c_str());
@@ -106,6 +105,7 @@ std::string GetMusicGenre(std::string path)
 
 }
 
+// getting the music genre as an enum
 Genre GenreStringToEnum(std::string genre)
 {
     Genre genre_enum = MUSIC;
@@ -146,12 +146,14 @@ Genre GenreStringToEnum(std::string genre)
     return genre_enum;
 }
 
+// renders the top UI
 void TopUI()
 {
     lf_push_font(&titleFont);
     lf_text("Music Program");
     lf_pop_font();
 
+    // title search UI
     {
         lf_push_font(&musicNameFont);
         LfUIElementProps props = lf_get_theme().inputfield_props;
@@ -173,6 +175,7 @@ void TopUI()
         lf_pop_font();
     }
 
+    // add new music UI
     {
         lf_set_ptr_x_absolute(width - 160 - MARGIN * 2);
         LfUIElementProps props = lf_get_theme().button_props;
@@ -182,37 +185,28 @@ void TopUI()
         props.border_width = 0;
         props.corner_radius = 4;
         lf_push_style_props(props);
-        //lf_set_line_should_overflow(false);
         if(lf_button_fixed("Add New Music" , 160 , -1) == LF_CLICKED)
         {
             current_tab = ADD_NEW_SONG;
         }
 
         lf_pop_style_props();
-        //lf_set_line_should_overflow(true);
+
     }
 
     lf_next_line();
 
-
-    //lf_set_ptr_x_absolute(400);
-    //lf_set_ptr_y_absolute(200);
-
-    
+    // filter by genre UI
     {
         static int selected_genre = 0;
-
-        //lf_set_line_should_overflow(true);
 
         static const char* items[] = { "All" , "music" , "pop" , "hip-hop" , "k-pop" , "rock" , "chill" , "country" , "metal"}; 
 
         {
             LfUIElementProps props = lf_get_theme().button_props;
             props.color = (LfColor){18 , 18 , 18 , 255};
-            //props.margin_left = 15;
             props.border_width = 0;
             props.text_color = LF_WHITE;
-            //props.corner_radius = 0;
             props.border_color = (LfColor){180 , 180 , 180 , 255};
             lf_push_font(&musicNameFont);
             lf_push_style_props(props);
@@ -231,11 +225,9 @@ void TopUI()
             
         }
 
-        //lf_set_line_should_overflow(false);
     }
 
-    //lf_next_line();
-
+    // search by artist UI
     {
         lf_push_font(&musicNameFont);
         LfUIElementProps props = lf_get_theme().inputfield_props;
@@ -258,8 +250,10 @@ void TopUI()
         lf_input_text(&new_task_input_artist_search);
         lf_pop_style_props();
         lf_pop_font();
+
     }
 
+    // delete music icon (based on artist . . . will add by genre later)
     {
         LfUIElementProps props = lf_get_theme().button_props;
         props.margin_left = -10;
@@ -295,19 +289,17 @@ void TopUI()
 
     }
 
-    //lf_set_ptr_x_absolute(lf_get_ptr_x() + 70);
 
+    // sort base on artist or name UI
     {
         lf_set_ptr_x_absolute(width - 160 - MARGIN * 2);
         LfUIElementProps props = lf_get_theme().button_props;
         props.margin_left = -8;
         props.margin_top = 7;
-        //props.margin_right = 70;
         props.color = (LfColor){65, 167, 204 ,255};
         props.border_width = 0;
         props.corner_radius = 4;
         lf_push_style_props(props);
-        //lf_set_line_should_overflow(false);
 
         std::string name = (current_sort)? "Artist" : "Title";
 
@@ -322,12 +314,9 @@ void TopUI()
         }
 
         lf_pop_style_props();
-        //lf_set_line_should_overflow(true);
     }
 
-    //lf_next_line();
-    //lf_next_line();
-
+    // the song name UI
     if(playing_song != nullptr)
     {
         lf_set_ptr_x_absolute((width - MARGIN * 2 - 300) / 2 + 20);
@@ -344,11 +333,11 @@ void TopUI()
 
 }
 
+// side panel , render
 void sidePanel()
 {
- //   std::cerr << "hello\n";
 
-    if (playlist->head == nullptr)
+    if (playlist->head == nullptr) // if it's null . . . no music :((
     {
         lf_push_font(&musicNameFont);
         lf_text("no Musics :(( ");
@@ -362,13 +351,9 @@ void sidePanel()
     Node* current = playlist->head;
 
     int count = 0;
-   // std::cerr << "hello\n";
+
     while (current)
     {
-        // int box_x = lf_get_ptr_x();
-        // int box_y = lf_get_ptr_y();
-
-        // lf_rect(300 - MARGIN * 2 - 10, 70 ,LF_NO_COLOR,0);
 
         if (Filter != All && current->song.genre != Filter)
         {
@@ -376,27 +361,14 @@ void sidePanel()
             continue;
         }
 
-        // lf_set_ptr_x_absolute(box_x);
-        // lf_set_ptr_y_absolute(box_y);
-
+        // search base on title Logic
         {
             std::string title_song = current->song.song_name;
             std::string input_title_song = input_str_title_search;
-            //std::cout << input_title_song.size() << '\n';
-            // for (auto& c : title_song)
-            // {
-            //     c = toupper(c);
-            // }
             
             title_song = UpperCase(title_song);
             input_title_song = UpperCase(input_title_song);
 
-            // for (auto& c : input_title_song)
-            // {
-            //     c = toupper(c);
-            // }
-
-            //std::cout << title_song << " -- " << input_title_song << '\n';
 
             if (!input_title_song.empty() && title_song.find(input_title_song) == std::string::npos)
             {
@@ -406,6 +378,7 @@ void sidePanel()
             
         }
 
+        // search base on artist Logic
         {
             std::string artist_song = current->song.artist;
             std::string input_artist_song = input_str_artist_search;
@@ -428,8 +401,7 @@ void sidePanel()
             
         }
 
-
-        //std::cerr << "hello\n";
+        // the play button logic and UI
         LfUIElementProps props = lf_get_theme().button_props;
         props.color = LF_NO_COLOR;
         props.border_width = 0;
@@ -438,19 +410,12 @@ void sidePanel()
 
         lf_push_style_props(props);
 
-        //std::cerr << ii << " : " << current->song.paused << '\n';
-
         if (current->song.paused == true)
         {
 
-            // if(Mix_Playing(-1) == 0)
-            // {
-            //     Mix_SetMusicPosition(0);
-            // }
-
-            if ((Mix_PlayingMusic() == 0) && (playing_song != nullptr) && (sound != nullptr) && Mix_Playing(-1) == 0)
+            if ((Mix_PlayingMusic() == 0) && (playing_song != nullptr) && (sound != nullptr) && Mix_Playing(-1) == 0) // if no song is playing
             {
-                if (loop_type)
+                if (loop_type) // if loop type is all musics . . . it will load the next music in the playlist (if it exists)
                 {
                     if(playing_song->next != nullptr)
                     {
@@ -461,13 +426,13 @@ void sidePanel()
                     }
                     else
                     {
-                         if(!(playing_song->song.paused)) playing_song->song.paused = true;
+                        if(!(playing_song->song.paused)) playing_song->song.paused = true;
                         playing_song = nullptr;
                         glfwSetWindowTitle(window , "ff");
                         Mix_FreeMusic(sound);
                     }
                 }
-                else
+                else // else loop the current music
                 {
                     playing_song->song.loadAudio();
                     playing_song->song.playMusic();
@@ -519,26 +484,19 @@ void sidePanel()
         
         lf_pop_style_props();
 
-        //smaller_musicNameFont
-
+        // render the music name
         float current_x = lf_get_ptr_x();
         {
             lf_set_line_should_overflow(false);
 
             lf_set_ptr_y_absolute(lf_get_ptr_y() + 7);
             lf_push_font(&musicNameFont);
-            //char name[50];
-            //sscanf(current->song.song_name.c_str(), "musics/%49s", name);
             std::string nero = current->song.song_name;
-
-
 
             if (nero.size() > 15) {
                 nero = nero.substr(0, 15 - 3) + "...";
             }
 
-
-            //std::string nero = nero + " : " + std::to_string(current->song.time);
             lf_set_text_wrap(true);
             lf_text(nero.c_str());
             lf_set_text_wrap(false);
@@ -549,7 +507,8 @@ void sidePanel()
             lf_pop_font();
             lf_set_line_should_overflow(true);
         }
-        
+
+        // remove music logic
         {
             LfUIElementProps props = lf_get_theme().button_props;
             props.margin_left = 3;
@@ -563,6 +522,7 @@ void sidePanel()
 
             if (lf_image_button(((LfTexture){.id = trashbinIcon.id , 24 , 24})) == LF_CLICKED)
             {   
+                // i can change it later yeah sure , but for now , it works
                 playlist->removeSonge_by_name(current->song.song_name);
 
                 if (playing_song == current)
@@ -588,15 +548,14 @@ void sidePanel()
         lf_set_ptr_y_absolute(lf_get_ptr_y() + 30);
         lf_set_ptr_x_absolute(current_x + 2);
 
+        // render the music artist
         {
-//            lf_next_line();
 
             lf_push_font(&smaller_musicNameFont);
             lf_text(current->song.artist.c_str());
             lf_pop_font();
 
             lf_next_line();
-            //lf_set_line_should_overflow(true);
             current = current->next;
         }
 
@@ -604,6 +563,7 @@ void sidePanel()
         count++;
     }
 
+    // if no music found in the search logic
     if(count == 0)
     {
         lf_push_font(&musicNameFont);
@@ -615,6 +575,7 @@ void sidePanel()
 
 }
 
+// basic init stuff
 bool initializeSDL() 
 {
     if (SDL_Init(SDL_INIT_AUDIO) < 0) 
@@ -635,6 +596,7 @@ bool initializeSDL()
     return true;
 }
 
+// render the bottom panel
 void bottomPanel()
 {
     if (playing_song == nullptr)
@@ -644,7 +606,7 @@ void bottomPanel()
 
     bool key = lf_key_is_down(32);
 
-    if (key && space_key && should_i_pause_or_unpause_the_music)
+    if (key && space_key && should_i_pause_or_unpause_the_music) // space button can pause and unpause the music
     {
         playing_song->song.pauseMusic();
         std::cerr << "you pressed space\n";
@@ -655,8 +617,6 @@ void bottomPanel()
     {
         space_key = true;
     }
-    
-    // Mix_GetMusicVolume(sound);
 
     int herbert = (Mix_GetMusicPosition(sound) * 100)/((float)(playing_song->song.time));
 
@@ -664,9 +624,9 @@ void bottomPanel()
 
     float current_x = lf_get_ptr_x();
 
-
     float slider_y = lf_get_ptr_y();
 
+    // i tried to simulate an scroll bar (idk the name don't blame me) for changing the music posotion , it works but it's kinda buggy though
     {
         float slider_x = lf_get_ptr_x();
         LfUIElementProps props = lf_get_theme().button_props;
@@ -683,8 +643,6 @@ void bottomPanel()
         lf_set_ptr_y_absolute(lf_get_ptr_y() - 13);
         slider_x = slider_x + 120;
 
-
-        //lf_rect( 500 ,3,LF_BLACK , 1);
         if(lf_button_fixed("" , 500 , 1) == LF_CLICKED)
         {
         
@@ -713,6 +671,7 @@ void bottomPanel()
 
     lf_set_ptr_y_absolute(slider_y + 24);
 
+    // shuffle icon and logic (random)
     {
         lf_set_ptr_x_absolute(556);
 
@@ -726,20 +685,6 @@ void bottomPanel()
 
         if (lf_image_button(((LfTexture){.id = shuffleIcon.id , 16 , 16})) == LF_CLICKED)
         {   
-            // if (playing_song->pre != nullptr)
-            // {
-            //     if(!playing_song->song.paused) playing_song->song.pauseMusic();
-            //     Mix_FreeMusic(sound);
-            //     playing_song = playing_song->pre;
-            //     playing_song->song.loadAudio();
-            //     playing_song->song.playMusic();
-            // }
-            // else
-            // {
-            //     Mix_FreeMusic(sound);
-            //     playing_song->song.loadAudio();
-            //     playing_song->song.playMusic();
-            // }
 
             Node* temp = playing_song;
 
@@ -759,7 +704,6 @@ void bottomPanel()
             
             if(!playing_song->song.paused) playing_song->song.pauseMusic();
             playing_song->song.freeMusic();
-            //Mix_FreeMusic(sound);
             playing_song = temp;
             playing_song->song.loadAudio();
             playing_song->song.playMusic();
@@ -773,6 +717,7 @@ void bottomPanel()
 
     lf_set_ptr_y_absolute(slider_y + 16);
 
+    // previous Icon
     {
 
         lf_set_ptr_x_absolute(596);
@@ -791,7 +736,6 @@ void bottomPanel()
             {
                 if(!playing_song->song.paused) playing_song->song.pauseMusic();
                 playing_song->song.freeMusic();
-                //Mix_FreeMusic(sound);
                 playing_song = playing_song->pre;
                 playing_song->song.loadAudio();
                 playing_song->song.playMusic();
@@ -799,7 +743,6 @@ void bottomPanel()
             else
             {
                 playing_song->song.freeMusic();
-                //Mix_FreeMusic(sound);
                 playing_song->song.loadAudio();
                 playing_song->song.playMusic();
             }
@@ -814,6 +757,7 @@ void bottomPanel()
 
     lf_set_ptr_y_absolute(slider_y);
     
+    // play and pause the music ICON
     {
 
         lf_set_ptr_x_absolute(648);
@@ -848,6 +792,7 @@ void bottomPanel()
 
     lf_set_ptr_y_absolute(slider_y + 16);
 
+    // next music Icon
     {
 
         lf_set_ptr_x_absolute(730);
@@ -866,14 +811,12 @@ void bottomPanel()
             {
                 if(!playing_song->song.paused) playing_song->song.pauseMusic();
                 playing_song->song.freeMusic();
-                //Mix_FreeMusic(sound);
                 playing_song = playing_song->next;
                 playing_song->song.loadAudio();
                 playing_song->song.playMusic();
             }
             else
             {
-                //Mix_FreeMusic(sound);
                 playing_song->song.freeMusic();
                 playing_song->song.loadAudio();
                 playing_song->song.playMusic();
@@ -890,6 +833,7 @@ void bottomPanel()
 
     int temp_x = lf_get_ptr_x();
 
+    // loop icon UI
     {
         lf_set_ptr_x_absolute(786);
 
@@ -932,28 +876,14 @@ void bottomPanel()
         props.margin_bottom = 10;
         lf_push_style_props(props);
 
-
-        // bool key = lf_key_is_down(32);
-
-        // if (key && space_key && should_i_pause_or_unpause_the_music)
-        // {
-        //     playing_song->song.pauseMusic();
-        //     std::cerr << "you pressed space\n";
-        //     space_key = false;
-        // }
-
-        // if (lf_key_is_released(32))
-        // {
-        //     space_key = true;
-        // }
-
         bool key = lf_key_went_down(77);
 
-        if(key && should_i_mute_or_unmute_the_music)
+        if(key && should_i_mute_or_unmute_the_music) // M can also mute and unmute the music and it will remember the last music volume
         {
             std::cout << "you pressed M \n";
         }
 
+        // render Icons
         if (is_mute)
         {
             if (lf_image_button(((LfTexture){.id = muteIcon.id , 32 , 32})) == LF_CLICKED || (key && should_i_mute_or_unmute_the_music))
@@ -985,18 +915,15 @@ void bottomPanel()
 
     int musicVolume = Mix_GetMusicVolume(sound) * 100 / MIX_MAX_VOLUME;
 
-    //musicVolume = musicVolume * 3;
-
     lf_set_ptr_y_absolute(hight - MARGIN * 2 - 3);
     lf_set_ptr_x_absolute(lf_get_ptr_x() - 135);
-    
-   // lf_next_line();
 
     float current_x_2 = lf_get_ptr_x();
     
 
     float slider_y_2 = lf_get_ptr_y();
 
+    // same scroll bar logic . . . different reason
     {
         float slider_x = lf_get_ptr_x();
         LfUIElementProps props = lf_get_theme().button_props;
@@ -1013,8 +940,6 @@ void bottomPanel()
         lf_set_ptr_y_absolute(lf_get_ptr_y() - 13);
         slider_x = slider_x + 120;
 
-
-        //lf_rect( 500 ,3,LF_BLACK , 1);
         if(lf_button_fixed("" , 100 , 1) == LF_CLICKED)
         {
 
@@ -1046,10 +971,11 @@ void bottomPanel()
 
 }
 
+// read the music and then soert them all from the file (at the start)
 void readFile()
 {
 
-    if (std::filesystem::exists("musics") & std::filesystem::is_directory("music"))
+    if (std::filesystem::exists("musics") && std::filesystem::is_directory("music"))
     {
         std::filesystem::create_directory("musics");
         return;
@@ -1080,9 +1006,7 @@ void readFile()
             
 
             Song song(entry.path().string() , music_title , music_artist , music_genre);
-            //song.changeArtistsName("r");
             std::cerr << song.song_name << '\n';
-            //song.changeAlbumsName("r");
             playlist->addSong(song);
             Mix_FreeMusic(music);
         }
@@ -1222,6 +1146,7 @@ void RenderAddNewSongPage()
 {
     lf_div_begin(((vec2s){MARGIN , MARGIN}) , ((vec2s){ width - MARGIN * 2 ,hight - MARGIN * 2}) , true );
 
+    // set the theme
     {
         lf_push_font(&musicNameFont);
         LfUIElementProps props = lf_get_theme().text_props;
@@ -1242,7 +1167,6 @@ void RenderAddNewSongPage()
         props.margin_left = 15;
         props.text_color = (LfColor){148, 148, 148 , 255};
         lf_push_style_props(props);
-        //lf_text_wide("music path :");
         lf_text("Music path :");
         lf_pop_style_props();
         lf_pop_font();
@@ -1275,7 +1199,6 @@ void RenderAddNewSongPage()
         props.margin_right = 10;
         props.corner_radius = 4;
         props.border_color = (LfColor){1 , 1 , 1, 255};
-        //props.margin_bottom = 10;
 
         lf_push_style_props(props);
 
@@ -1283,6 +1206,7 @@ void RenderAddNewSongPage()
         {
             const char* filters[1] = {"*.mp3"};
 
+            // something i don't really understand , but it works , according to the documents this is the right way to do this (thanks to the tinyfiledialogs dude ) 
             const char* filePath = tinyfd_openFileDialog(
                 "Select an MP3 File",
                 "",
@@ -1297,9 +1221,7 @@ void RenderAddNewSongPage()
                 Mix_Music* music = Mix_LoadMUS(filePath);
 
                 std::string music_title = Mix_GetMusicTitle(music);
-                std::string music_artist = Mix_GetMusicArtistTag(music);
-
-              //  input_str_path = filePath;        
+                std::string music_artist = Mix_GetMusicArtistTag(music);     
 
                 strcpy(input_str_path , filePath);
                 strcpy(input_str_artist, music_artist.c_str());
@@ -1319,7 +1241,6 @@ void RenderAddNewSongPage()
         props.margin_left = 15;
         props.text_color = (LfColor){148, 148, 148 , 255};
         lf_push_style_props(props);
-        //lf_text_wide("music path :");
         lf_text("Title :");
         lf_pop_style_props();
         lf_pop_font();
@@ -1353,7 +1274,6 @@ void RenderAddNewSongPage()
         props.margin_left = 15;
         props.text_color = (LfColor){148, 148, 148 , 255};
         lf_push_style_props(props);
-        //lf_text_wide("music path :");
         lf_text("Artist :");
         lf_pop_style_props();
         lf_pop_font();
@@ -1388,7 +1308,6 @@ void RenderAddNewSongPage()
         props.margin_left = 15;
         props.text_color = (LfColor){148, 148, 148 , 255};
         lf_push_style_props(props);
-        //lf_text_wide("music path :");
         lf_text("Genre :");
         lf_pop_style_props();
         lf_pop_font();
@@ -1399,16 +1318,13 @@ void RenderAddNewSongPage()
 
     static int selected_genre = -1;
 
-    static const char* items[] = {"music" , "pop" , "hip-hop" , "k-pop" , "rock" , "chill" , "country" , "metal"}; 
+    static const char* items[] = {"music" , "pop" , "hip-hop" , "k-pop" , "rock" , "chill" , "country" , "metal"}; // selection box for genre
 
-//    if(false)
     {
         LfUIElementProps props = lf_get_theme().button_props;
         props.color = (LfColor){18 , 18 , 18 , 255};
-        //props.margin_left = 15;
         props.border_width = 0;
         props.text_color = LF_WHITE;
-        //props.corner_radius = 0;
         props.border_color = (LfColor){180 , 180 , 180 , 255};
         lf_push_font(&musicNameFont);
         lf_push_style_props(props);
@@ -1417,8 +1333,9 @@ void RenderAddNewSongPage()
         lf_pop_font();
     }
 
+    // add new Music logic here
     {
-        bool form_complete = (strlen(input_str_artist) && strlen(input_str_path) && strlen(input_str_title) && selected_genre != -1);
+        bool form_complete = (strlen(input_str_artist) && strlen(input_str_path) && strlen(input_str_title) && selected_genre != -1); // check if the form is completed or not
         lf_push_font(&musicNameFont);
         LfUIElementProps props = lf_get_theme().button_props;
         props.color = (form_complete) ? (LfColor){65 , 167 , 204 , 255} : (LfColor){80 , 80 , 80 , 255};
@@ -1428,41 +1345,41 @@ void RenderAddNewSongPage()
         props.text_color = LF_BLACK;
         props.corner_radius = 5;
         lf_push_style_props(props);
-        //lf_set_line_should_overflow(false);
         
         lf_set_ptr_x_absolute(width - 200 - MARGIN - 5);
         lf_set_ptr_y_absolute(hight - 50 - MARGIN - 5);
 
-        if(lf_button_fixed("Add Task" , 150 , -1) == LF_CLICKED && form_complete)
+        if(lf_button_fixed("Add Task" , 150 , -1) == LF_CLICKED && form_complete) // if the form if complete
         {
 
-            std::filesystem::path somewhere_idk_im_losing_my_sanity_its_2AM_AHHHHHHH = input_str_path;
+            std::filesystem::path somewhere_idk_im_losing_my_sanity_its_2AM_AHHHHHHH = input_str_path; // get the new music path
 
-            std::filesystem::path RM = "musics/";
+            std::filesystem::path RM = "musics/"; // music folder
 
             bool exist = false;
             int num = -1;
             
             if(std::filesystem::exists(RM / somewhere_idk_im_losing_my_sanity_its_2AM_AHHHHHHH.filename()) == false)
-                std::filesystem::copy(input_str_path , RM / somewhere_idk_im_losing_my_sanity_its_2AM_AHHHHHHH.filename());
-            else
-            {
+                std::filesystem::copy(input_str_path , RM / somewhere_idk_im_losing_my_sanity_its_2AM_AHHHHHHH.filename()); // basic validations
+            else   
                 return;
-            }
-            
 
 
-            std::string cheese_berger = "musics/" + somewhere_idk_im_losing_my_sanity_its_2AM_AHHHHHHH.filename().string();
+            std::string cheese_berger = "musics/" + somewhere_idk_im_losing_my_sanity_its_2AM_AHHHHHHH.filename().string(); // full path
 
-            Song new_song(cheese_berger,std::string(input_str_title),std::string(input_str_artist),(Genre)selected_genre);
+            Song new_song(cheese_berger,std::string(input_str_title),std::string(input_str_artist),(Genre)selected_genre); // create the song
 
-            new_song.changeArtistsName(input_str_artist);
-            new_song.changeTitlesName(input_str_title);
-            new_song.changeGenre(items[selected_genre]);
+            new_song.changeArtistsName(input_str_artist);  // change the music artists 
+            new_song.changeTitlesName(input_str_title);    // change the music title
+            new_song.changeGenre(items[selected_genre]);   // change the music genre
 
-            playlist->addSong(new_song);
+            playlist->addSong(new_song); // add the song to the playlist
 
-            current_tab = MAIN_PAGE;
+            current_tab = MAIN_PAGE; // set the page to the main page
+
+            playlist->Sort((SORT_FILTER)(!current_sort)); // resort the playlist
+
+            // free memory , setting stuff
             selected_genre = -1;
             memset(input_str_title, 0, sizeof(input_str_title));
             memset(input_str_path, 0, sizeof(input_str_path));
@@ -1474,13 +1391,12 @@ void RenderAddNewSongPage()
             lf_input_field_unselect_all(&new_task_input_path);
             lf_input_field_unselect_all(&new_task_input_title);
         }
-
-        //lf_set_line_should_overflow(true);
         
         lf_pop_style_props();
         lf_pop_font();
     }
 
+    // the back button
     {
         LfUIElementProps props = lf_get_theme().image_props;
         props.color = (LfColor){20,20,20,255};
@@ -1498,6 +1414,7 @@ void RenderAddNewSongPage()
 
 }
 
+// free the memory (texture and fonts)
 void free_memory()
 {
     lf_free_texture(&playIcon);
@@ -1563,6 +1480,7 @@ int main()
             RenderAddNewSongPage();
             break;
         default:
+            // for unexpected behaviour 
             lf_text("something went wrong :(( ");
             break;
         }
@@ -1574,6 +1492,7 @@ int main()
 
     }
 
+    // exit and free
     free_memory();
     if(Mix_Playing(-1) != 0)
         Mix_FreeMusic(sound);

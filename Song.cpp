@@ -12,7 +12,7 @@ extern int channel;
 extern float position;
 extern GLFWwindow* window;
 
-
+// simple to understand ...  
 std::string UpperCase(std::string string)
 {
     for (auto& Char : string)
@@ -23,7 +23,6 @@ std::string UpperCase(std::string string)
     return string;
 }
 
-
 Song::Song( std::string path , std::string song_name , std::string artist , Genre genre)
 {
     this->path = path;
@@ -33,11 +32,13 @@ Song::Song( std::string path , std::string song_name , std::string artist , Genr
     time = getAudioDuration();
 }
 
+// idk why i made this . . . i just did lol
 Song::Song(int None)
 {
 
 }
 
+// get the Audio Duration (music length in second)
 int Song::getAudioDuration()
 {
     Mix_Music* music = Mix_LoadMUS(path.c_str());
@@ -48,6 +49,7 @@ int Song::getAudioDuration()
     return duration;
 }
 
+// load music and set the new title 
 void Song::loadAudio()
 {
     sound = Mix_LoadMUS(path.c_str());
@@ -60,6 +62,7 @@ void Song::loadAudio()
     
 }
 
+// play the damn music
 void Song::playMusic()
 {
     //Mix_PlayMusic(sound,0);
@@ -67,12 +70,14 @@ void Song::playMusic()
     paused = false;
 }
 
+// free music A.K.A unload the music and resetting the title
 void Song::freeMusic()
 {
     Mix_FreeMusic(sound);
     glfwSetWindowTitle(window , "ff");
 }
 
+// pause and unpause (resume) logic
 void Song::pauseMusic()
 {
     paused = !paused;
@@ -89,6 +94,7 @@ void Song::pauseMusic()
     
 }
 
+// set the new title
 void Song::changeArtistsName(std::string name)
 {
     TagLib::FileRef f(path.c_str());
@@ -102,6 +108,7 @@ void Song::changeArtistsName(std::string name)
     
 }
 
+// save the new Genre
 void Song::changeGenre(std::string name)
 {
     TagLib::FileRef f(path.c_str());
@@ -113,6 +120,7 @@ void Song::changeGenre(std::string name)
     f.save();
 }
 
+// save the new title
 void Song::changeTitlesName(std::string name)
 {
     TagLib::FileRef f(path.c_str());

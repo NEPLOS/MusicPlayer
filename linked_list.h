@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include "Song.h"
-
+// Node class
 class Node
 {
     public:
@@ -12,7 +12,7 @@ class Node
     Node* pre;
     Node(Song song) : song(song)
     {
-        next = nullptr;
+        next = nullptr; // default values
         pre = nullptr;
     }
 };
@@ -32,6 +32,3 @@ class DoubleLinkedList
     void Sort(SORT_FILTER base_on);
     ~DoubleLinkedList();
 };
-
-    //Node* search_by_songName(std::string song_name);
-    //Node* search_by_artist(std::string artist);

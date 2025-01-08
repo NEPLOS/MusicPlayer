@@ -39,7 +39,7 @@ void DoubleLinkedList::addSong(Song& song)
     
 
 }
-
+// will chack if the --New-- music music is already exists in our playlists or not
 bool DoubleLinkedList::doesExist(std::string song_name, std::string artist)
 {
     std::cout << "oi\n";
@@ -63,7 +63,7 @@ bool DoubleLinkedList::doesExist(std::string song_name, std::string artist)
     return false;
 }
 
-
+// remove the music from the playlist by artist (if exists)
 void DoubleLinkedList::removeSong_by_artist(std::string artist)
 {
 
@@ -114,6 +114,7 @@ void DoubleLinkedList::removeSong_by_artist(std::string artist)
     
 }
 
+// remove the music from the playlist by music title (if exists)
 void DoubleLinkedList::removeSonge_by_name(std::string song_name)
 {
     if (head == nullptr)
@@ -163,6 +164,7 @@ void DoubleLinkedList::removeSonge_by_name(std::string song_name)
     
 }
 
+// same as removeSong_by_artist function , but in the artist search 
 void DoubleLinkedList::removeSong_by_artist_search(std::string artist)
 {
     if (head == nullptr)
@@ -175,18 +177,8 @@ void DoubleLinkedList::removeSong_by_artist_search(std::string artist)
     while (current != nullptr)
     {
 
-        std::string artist_song = current->song.artist;
-        std::string input_artist_song = artist;
-
-        for (auto& c : artist_song)
-        {
-            c = toupper(c);
-        }
-
-        for (auto& c : input_artist_song)
-        {
-            c = toupper(c);
-        }
+        std::string artist_song = UpperCase(current->song.artist);
+        std::string input_artist_song = UpperCase(artist);
 
         if (!input_artist_song.empty() && artist_song.find(input_artist_song) != std::string::npos)
         {
@@ -225,6 +217,7 @@ void DoubleLinkedList::removeSong_by_artist_search(std::string artist)
     }
 }
 
+// sort the playlists base on our filter (MUSIC_TITLE or MUSIC_ARTIST)
 void DoubleLinkedList::Sort(SORT_FILTER base_on)
 {
 
@@ -233,6 +226,7 @@ void DoubleLinkedList::Sort(SORT_FILTER base_on)
         return;
     }
 
+    // selection sort algorithm , and preventing unexpected and weird stuff
     for (Node* i = head; i != nullptr; i = i->next)
     {
         Node* minimum = i; 
@@ -259,7 +253,6 @@ void DoubleLinkedList::Sort(SORT_FILTER base_on)
             if (playing_song == nullptr)    
                 continue;
             
-
             if (playing_song == minimum)
             {
                 playing_song = i;
