@@ -300,7 +300,7 @@ void TopUI()
     {
         lf_set_ptr_x_absolute(width - 160 - MARGIN * 2);
         LfUIElementProps props = lf_get_theme().button_props;
-        props.margin_left = 0;
+        props.margin_left = -8;
         props.margin_top = 7;
         //props.margin_right = 70;
         props.color = (LfColor){65, 167, 204 ,255};
@@ -311,9 +311,9 @@ void TopUI()
 
         std::string name = (current_sort)? "Artist" : "Title";
 
-        name = "sort base " + name;
+        name = "sort base on " + name;
 
-        if(lf_button_fixed(name.c_str() , 160 , -1) == LF_CLICKED)
+        if(lf_button_fixed(name.c_str() , 176 , -1) == LF_CLICKED)
         {
             current_sort = !current_sort;
 
