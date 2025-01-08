@@ -1,0 +1,20 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build Project",
+            "type": "shell",
+            "command": "g++",
+            "args": [
+                "*cpp",
+                "-ldl", "-lX11", "-lleif", "-lglfw", "-lm", "-lGL", "-lclipboard", "-lxcb", "-lSDL2", "-lSDL2_mixer", "-O3", "-o", "project"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": ["$gcc"],
+            "detail": "Compile project using g++"
+        }
+    ]
+}

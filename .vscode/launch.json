@@ -1,0 +1,38 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug Project",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/project",  // Path to the executable
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": true, // Set to true to use an external terminal for input/output
+            "MIMode": "gdb",  // Use GDB for debugging
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "miDebuggerPath": "/usr/bin/gdb", // Path to GDB (change if necessary)
+            "preLaunchTask": "Build Project",  // This tells VS Code to run the Build task before launching the debug session
+            "logging": {
+                "moduleLoad": false,
+                "trace": true,
+                "engineLogging": true
+            },
+            "shellLaunchConfig": {
+                "executable": "/bin/bash",  // Adjust if needed
+                "args": ["-l"]
+            },
+            "sourceFileMap": {
+                "/path/to/your/source": "${workspaceFolder}"
+            }
+        }
+    ]
+}
