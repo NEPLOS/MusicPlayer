@@ -1048,6 +1048,14 @@ void bottomPanel()
 
 void readFile()
 {
+
+    if (std::filesystem::exists("musics") & std::filesystem::is_directory("music"))
+    {
+        std::filesystem::create_directory("musics");
+        return;
+    }
+    
+
     for (auto& entry : std::filesystem::directory_iterator("musics/")) 
     {
         std::cerr << "ni\n";
