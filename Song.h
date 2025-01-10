@@ -44,6 +44,7 @@ public:
     Song( std::string path , std::string song_name , std::string artist , Genre genre);
     Song(int None = -1);
     int getAudioDuration();
+    void loadAndplay();
     void loadAudio();
     void playMusic();
     void changeArtistsName(std::string name);
@@ -55,3 +56,5 @@ public:
 
 
 std::string UpperCase(std::string string);
+std::string GetMusicGenre(std::string path);
+Genre GenreStringToEnum(std::string genre);

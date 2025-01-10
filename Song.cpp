@@ -120,6 +120,12 @@ void Song::changeGenre(std::string name)
     f.save();
 }
 
+void Song::loadAndplay()
+{
+    loadAudio();
+    playMusic();
+}
+
 // save the new title
 void Song::changeTitlesName(std::string name)
 {
@@ -131,5 +137,62 @@ void Song::changeTitlesName(std::string name)
     //song_name = name;
 
     f.save();
+}
+
+// get the music Genre from a path
+std::string GetMusicGenre(std::string path)
+{
+    TagLib::FileRef file(path.c_str());
+
+    TagLib::Tag *tag = file.tag();
+
+    std::string genre = tag->genre().toCString(true);
+
+    for (auto& c : genre)
+        c = toupper(c);
+
+    return genre;
+
+}
+
+// getting the music genre as an enum
+Genre GenreStringToEnum(std::string genre)
+{
+    Genre genre_enum = MUSIC;
+
+    if (genre == "HIP-HOP" || genre == "HIPHOP")
+    {
+        genre_enum = HIP_HOP;
+    }
+    else if(genre == "POP")
+    {
+        genre_enum = POP;
+    }
+    else if(genre == "KPOP" || genre == "K-POP" || genre == "K_POP")
+    {   
+        genre_enum = K_POP;
+    }
+    else if(genre == "COUNTRY")
+    {
+        genre_enum = COUNTRY;
+    }
+    else if(genre == "METAL")
+    {
+        genre_enum = METAL;
+    }
+    else if(genre == "CHILL")
+    {
+        genre_enum = CHILL;
+    }
+    else if(genre == "ROCK")
+    {
+        genre_enum = ROCK;
+    }
+    else
+    {
+        genre_enum = MUSIC;
+    }
+    
+    return genre_enum;
 }
 
