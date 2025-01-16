@@ -123,7 +123,7 @@ void TopUI()
         {   
             if (strlen(input_str_artist_search) != 0)
             {
-                playlist->removeSong_by_artist_search(input_str_artist_search);
+                playlist->removeSong_by_artist_genre_search(input_str_artist_search , Filter);
 
                 if (playing_song != nullptr)
                 {
@@ -137,24 +137,7 @@ void TopUI()
                     }
                 }
             }
-
-            if (Filter != Genre::All)
-            {
-                playlist->removeSong_by_genre(Filter);
-                if (playing_song != nullptr)
-                {
-                    playing_song = playing_song->next;
-                    Mix_FreeMusic(sound);
-
-                    if (playing_song != nullptr)
-                    {
-                        playing_song->song.loadAndplay();
-                        space_key = true;
-                    }
-                }
-            }
-            
-            
+            memset(input_str_artist_search, 0, sizeof(input_str_artist_search));
             
         }
 

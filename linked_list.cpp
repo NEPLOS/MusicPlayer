@@ -165,7 +165,7 @@ void DoubleLinkedList::removeSonge_by_name(std::string song_name)
 }
 
 // same as removeSong_by_artist function , but in the artist search 
-void DoubleLinkedList::removeSong_by_artist_search(std::string artist)
+void DoubleLinkedList::removeSong_by_artist_genre_search(std::string artist , Genre genre)
 {
     if (head == nullptr)
     {
@@ -182,6 +182,14 @@ void DoubleLinkedList::removeSong_by_artist_search(std::string artist)
 
         if (!input_artist_song.empty() && artist_song.find(input_artist_song) != std::string::npos)
         {
+
+            if (current->song.genre != genre)
+            {
+                current = current->next;
+                continue;
+            }
+            
+
             Node* deletedNode = current;
 
 
@@ -267,55 +275,4 @@ void DoubleLinkedList::Sort(SORT_FILTER base_on)
         
     }
 
-}
-
-void DoubleLinkedList::removeSong_by_genre(Genre genre)
-{
-    if (head == nullptr)
-    {
-        return;
-    }
-    
-
-    Node* current = head;
-
-    while (current != nullptr)
-    {
-        std::cerr << current->song.genre << '\n';
-        if (current->song.genre == genre)
-        {
-            Node* deletedNode = current;
-
-            if (deletedNode == head)
-            {
-                head = head->next;
-                if (head != nullptr)
-                {
-                    head->pre = nullptr;
-                }
-                
-            }
-            else
-            {
-                if (deletedNode->pre)
-                {
-                    deletedNode->pre->next = deletedNode->next;
-                }
-
-                if (deletedNode->next)
-                {
-                    deletedNode->next->pre = deletedNode->pre;
-                }
-                
-            }
-
-            current = current->next;
-            delete deletedNode;
-        }
-        else
-        {
-            current = current->next;
-        }
-        
-    }
 }
