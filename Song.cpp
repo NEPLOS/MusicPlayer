@@ -146,10 +146,7 @@ std::string GetMusicGenre(std::string path)
 
     TagLib::Tag *tag = file.tag();
 
-    std::string genre = tag->genre().toCString(true);
-
-    for (auto& c : genre)
-        c = toupper(c);
+    std::string genre = UpperCase(tag->genre().toCString(true));
 
     return genre;
 

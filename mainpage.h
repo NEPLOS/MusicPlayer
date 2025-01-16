@@ -137,6 +137,23 @@ void TopUI()
                     }
                 }
             }
+
+            if (Filter != Genre::All)
+            {
+                playlist->removeSong_by_genre(Filter);
+                if (playing_song != nullptr)
+                {
+                    playing_song = playing_song->next;
+                    Mix_FreeMusic(sound);
+
+                    if (playing_song != nullptr)
+                    {
+                        playing_song->song.loadAndplay();
+                        space_key = true;
+                    }
+                }
+            }
+            
             
             
         }

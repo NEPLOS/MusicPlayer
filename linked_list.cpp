@@ -268,3 +268,54 @@ void DoubleLinkedList::Sort(SORT_FILTER base_on)
     }
 
 }
+
+void DoubleLinkedList::removeSong_by_genre(Genre genre)
+{
+    if (head == nullptr)
+    {
+        return;
+    }
+    
+
+    Node* current = head;
+
+    while (current != nullptr)
+    {
+        std::cerr << current->song.genre << '\n';
+        if (current->song.genre == genre)
+        {
+            Node* deletedNode = current;
+
+            if (deletedNode == head)
+            {
+                head = head->next;
+                if (head != nullptr)
+                {
+                    head->pre = nullptr;
+                }
+                
+            }
+            else
+            {
+                if (deletedNode->pre)
+                {
+                    deletedNode->pre->next = deletedNode->next;
+                }
+
+                if (deletedNode->next)
+                {
+                    deletedNode->next->pre = deletedNode->pre;
+                }
+                
+            }
+
+            current = current->next;
+            delete deletedNode;
+        }
+        else
+        {
+            current = current->next;
+        }
+        
+    }
+}
