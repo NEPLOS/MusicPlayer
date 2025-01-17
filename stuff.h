@@ -89,3 +89,6 @@ static bool is_mute = false;
 static int last_audio = MIX_MAX_VOLUME / 2;
 
 bool current_sort = true;
+
+bool UP_ARROW = true;
+bool DOWN_ARROW = true;

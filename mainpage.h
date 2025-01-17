@@ -217,6 +217,47 @@ void sidePanel()
             continue;
         }
 
+        // change the position of the songs
+        if (Filter == Genre::All && strlen(input_str_artist_search) == 0 && strlen(input_str_title_search) == 0)
+        {
+            
+            if (lf_key_is_down(GLFW_KEY_UP) && current == playing_song && UP_ARROW)
+            {
+                if(playing_song->pre != nullptr)
+                {
+
+                    Song temp = current->song;
+                    current->song = current->pre->song;
+                    current->pre->song = temp;
+                    playing_song = current->pre;
+                    UP_ARROW = false;
+                }
+            }
+
+            if (lf_key_is_released(GLFW_KEY_UP))
+            {
+                UP_ARROW = true;
+            }
+            
+
+            if (lf_key_is_down(GLFW_KEY_DOWN) && current == playing_song && DOWN_ARROW)
+            {
+                if(playing_song->next != nullptr)
+                {
+                    Song temp = current->song;
+                    current->song = current->next->song;
+                    current->next->song = temp;
+                    playing_song = current->next;
+                    DOWN_ARROW = false;
+                }
+            }
+
+            if (lf_key_is_released(GLFW_KEY_DOWN))
+            {
+                DOWN_ARROW = true;
+            }
+        }
+
         // search base on title Logic
         {
             std::string title_song = current->song.song_name;
