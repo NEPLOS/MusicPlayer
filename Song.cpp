@@ -98,7 +98,7 @@ void Song::pauseMusic()
 void Song::changeArtistsName(std::string name)
 {
     TagLib::FileRef f(path.c_str());
-
+    
     TagLib::Tag* tag = f.tag();
 
     tag->setArtist(name.c_str());

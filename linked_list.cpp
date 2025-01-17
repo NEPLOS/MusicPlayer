@@ -183,7 +183,7 @@ void DoubleLinkedList::removeSong_by_artist_genre_search(std::string artist , Ge
         if (!input_artist_song.empty() && artist_song.find(input_artist_song) != std::string::npos)
         {
 
-            if (current->song.genre != genre)
+            if (current->song.genre != genre && genre != All)
             {
                 current = current->next;
                 continue;
