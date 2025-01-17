@@ -53,6 +53,8 @@ void TopUI()
 
     lf_next_line();
 
+    float temp_y = lf_get_ptr_y();
+
     // filter by genre UI
     {
         static int selected_genre = 0;
@@ -167,6 +169,27 @@ void TopUI()
 
             (current_sort)? playlist->Sort(MUSIC_TITLE) : playlist->Sort(MUSIC_ARTIST);            
 
+        }
+
+        lf_pop_style_props();
+    }
+
+    lf_next_line();
+    
+    {
+        lf_set_ptr_y_absolute(temp_y + 55);
+        lf_set_ptr_x_absolute(width - 150 - MARGIN * 2);
+        LfUIElementProps props = lf_get_theme().button_props;
+        props.margin_left = -8;
+        props.margin_top = 7;
+        props.color = (LfColor){65, 167, 204 ,255};
+        props.border_width = 0;
+        props.corner_radius = 4;
+        lf_push_style_props(props);
+
+        if(lf_button_fixed("shuffle playlist" , 156 , -1) == LF_CLICKED)
+        {     
+            playlist->shuffle();
         }
 
         lf_pop_style_props();

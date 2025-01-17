@@ -276,3 +276,43 @@ void DoubleLinkedList::Sort(SORT_FILTER base_on)
     }
 
 }
+
+void DoubleLinkedList::shuffle()
+{
+
+    for (Node* target = head; target != nullptr; target = target->next)
+    {
+        Node* second_target = target;
+
+        int randnum = rand() % 50;
+
+        for (int i = 0; i < randnum; i++)
+        {
+            if (second_target->next == nullptr)
+            {
+                second_target = head;
+            }
+            else
+            {
+                second_target = second_target->next;
+            }
+        }
+
+        Song temp = target->song;
+        target->song = second_target->song;
+        second_target->song = temp;
+
+        if (playing_song == target)
+        {
+            playing_song = second_target;
+        }
+        else if (playing_song == second_target)
+        {
+            playing_song = target;
+        }
+        
+
+    }
+    
+    
+}
