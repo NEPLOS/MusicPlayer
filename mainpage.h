@@ -523,7 +523,7 @@ void bottomPanel()
 
     float slider_y = lf_get_ptr_y();
 
-    // i tried to simulate an scroll bar (idk the name don't blame me) for changing the music posotion , it works but it's kinda buggy though
+    // i tried to simulate a scroll bar (idk the name don't blame me) for changing the music position , it works but it's kinda buggy though
     {
         float slider_x = lf_get_ptr_x();
         LfUIElementProps props = lf_get_theme().button_props;
@@ -600,7 +600,6 @@ void bottomPanel()
             }
             
             if(!playing_song->song.paused) playing_song->song.pauseMusic();
-            //playing_song->song.freeMusic();
             playing_song = temp;
             playing_song->song.loadAndplay();
             
@@ -637,13 +636,11 @@ void bottomPanel()
                     if (playing_song->pre != nullptr)
                     {
                         if(!playing_song->song.paused) playing_song->song.pauseMusic();
-                        //playing_song->song.freeMusic();
                         playing_song = playing_song->pre;
                         playing_song->song.loadAndplay();
                     }
                     else
                     {
-                        //playing_song->song.freeMusic();
                         playing_song->song.loadAndplay();
                     }
                     break;
@@ -653,7 +650,6 @@ void bottomPanel()
                     if (current->song.genre == Filter)
                     {
                         if(!playing_song->song.paused) playing_song->song.pauseMusic();
-                        //playing_song->song.freeMusic();
                         playing_song = current;
                         playing_song->song.loadAndplay();
                         break;
@@ -665,8 +661,7 @@ void bottomPanel()
             }
 
             if (current == nullptr)
-             {
-                //playing_song->song.freeMusic();
+            {
                 playing_song->song.loadAndplay();
             }
             
@@ -740,13 +735,11 @@ void bottomPanel()
                     if (playing_song->next != nullptr)
                     {
                         if(!playing_song->song.paused) playing_song->song.pauseMusic();
-                        //playing_song->song.freeMusic();
                         playing_song = playing_song->next;
                         playing_song->song.loadAndplay();
                     }
                     else
                     {
-                        //playing_song->song.freeMusic();
                         playing_song->song.loadAndplay();
                     }
                     break;
@@ -756,7 +749,6 @@ void bottomPanel()
                     if (current->song.genre == Filter)
                     {
                         if(!playing_song->song.paused) playing_song->song.pauseMusic();
-                        //playing_song->song.freeMusic();
                         playing_song = current;
                         playing_song->song.loadAndplay();
                         break;
@@ -769,7 +761,6 @@ void bottomPanel()
 
             if (current == nullptr)
              {
-                //playing_song->song.freeMusic();
                 playing_song->song.loadAndplay();
             }
             
@@ -951,7 +942,7 @@ void RenderMainPage()
 
     lf_div_begin(((vec2s){300 , 498}) , ((vec2s){width - MARGIN * 2 , hight - MARGIN * 2}) , false);
 
-    bottomPanel(); // botten , botten panel   //lf_rect(100,100,LF_WHITE,0);
+    bottomPanel(); // botten , botten panel
 
     lf_div_end();
 
