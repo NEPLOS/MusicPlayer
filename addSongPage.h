@@ -194,6 +194,20 @@ void RenderAddNewSongPage()
         lf_pop_font();
     }
 
+    if(show_warning)
+    {
+        lf_set_ptr_x_absolute(450);
+        lf_set_ptr_y_absolute(500);
+        lf_push_font(&musicNameFont);
+        LfUIElementProps props = lf_get_theme().text_props;
+        props.color = (LfColor){255 , 15 , 15 , 200};
+        props.margin_bottom = 20;
+        lf_push_style_props(props);
+        lf_text("music already exist");
+        lf_pop_style_props();
+        lf_pop_font();
+    }
+
     // add new Music logic here
     {
         bool form_complete = (strlen(input_str_artist) && strlen(input_str_path) && strlen(input_str_title) && selected_genre != -1); // check if the form is completed or not
@@ -222,8 +236,12 @@ void RenderAddNewSongPage()
             
             if(std::filesystem::exists(RM / somewhere_idk_im_losing_my_sanity_its_2AM_AHHHHHHH.filename()) == false)
                 std::filesystem::copy(input_str_path , RM / somewhere_idk_im_losing_my_sanity_its_2AM_AHHHHHHH.filename()); // basic validations
-            else   
+            else
+            {
+                std::cout << "file already exist\n";
+                show_warning = true;
                 return;
+            }
 
 
             std::string cheese_berger = "musics/" + somewhere_idk_im_losing_my_sanity_its_2AM_AHHHHHHH.filename().string(); // full path
@@ -234,11 +252,18 @@ void RenderAddNewSongPage()
             new_song.changeTitlesName(input_str_title);    // change the music title
             new_song.changeGenre(items[selected_genre]);   // change the music genre
 
-            playlist->addSong(new_song); // add the song to the playlist
+            if(!(playlist->addSong(new_song))) // add the song to the playlist
+            {
+                std::cerr << "failed to add music\n";
+                show_warning = true;
+                std::filesystem::remove(RM / somewhere_idk_im_losing_my_sanity_its_2AM_AHHHHHHH.filename());
+                return;
+            }
 
-            current_tab = MAIN_PAGE; // set the page to the main page
-
-            playlist->Sort((SORT_FILTER)(!current_sort)); // resort the playlist
+            if(should_i_sort)
+            {
+                playlist->Sort((SORT_FILTER)(!current_sort)); // resort the playlist
+            }
 
             // free memory , setting stuff
             selected_genre = -1;
@@ -251,6 +276,10 @@ void RenderAddNewSongPage()
             lf_input_field_unselect_all(&new_task_input_artist);
             lf_input_field_unselect_all(&new_task_input_path);
             lf_input_field_unselect_all(&new_task_input_title);
+
+            current_tab = MAIN_PAGE; // set the page to the main page
+            show_warning = false;
+        
         }
         
         lf_pop_style_props();

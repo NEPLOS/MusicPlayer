@@ -65,8 +65,6 @@ void readFile()
         }
         
     }
-
-    playlist->Sort(MUSIC_TITLE);
     
 }
 

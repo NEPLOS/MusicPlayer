@@ -167,6 +167,8 @@ void TopUI()
         {
             current_sort = !current_sort;
 
+            should_i_sort = true;
+
             (current_sort)? playlist->Sort(MUSIC_TITLE) : playlist->Sort(MUSIC_ARTIST);            
 
         }

@@ -8,12 +8,12 @@ DoubleLinkedList::DoubleLinkedList()
     head = nullptr;
 }
 
-void DoubleLinkedList::addSong(Song& song)
+bool DoubleLinkedList::addSong(Song& song)
 {
 
     if(doesExist(song.song_name , song.artist) && song.artist != "Unknown")
     {
-        return;
+        return false;
     }
 
 
@@ -23,7 +23,7 @@ void DoubleLinkedList::addSong(Song& song)
     if (head == nullptr)
     {
         head = newSong;
-        return;
+        return true;
     }
 
 
@@ -37,12 +37,12 @@ void DoubleLinkedList::addSong(Song& song)
     current->next = newSong;
     newSong->pre = current;
     
+    return true;
 
 }
 // will chack if the --New-- music music is already exists in our playlists or not
 bool DoubleLinkedList::doesExist(std::string song_name, std::string artist)
 {
-    std::cout << "oi\n";
     if (head == nullptr)
     {
         return false;
@@ -52,13 +52,12 @@ bool DoubleLinkedList::doesExist(std::string song_name, std::string artist)
 
     while (current != nullptr)
     {
-        if (current->song.artist == artist && current->song.song_name == song_name)
+        if ((current->song.artist == artist && current->song.song_name == song_name))
         {
             return true;
         }
         current = current->next;
     }
-    std::cout << "oi\n";
     
     return false;
 }

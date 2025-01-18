@@ -24,7 +24,7 @@ class DoubleLinkedList
     Node* head;
 
     DoubleLinkedList();
-    void addSong(Song& song);
+    bool addSong(Song& song);
     void removeSong_by_artist(std::string artist);
     void removeSonge_by_name(std::string song_name);
     void removeSong_by_artist_genre_search(std::string artist , Genre genre);

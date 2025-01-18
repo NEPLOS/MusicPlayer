@@ -92,3 +92,5 @@ bool current_sort = true;
 
 bool UP_ARROW = true;
 bool DOWN_ARROW = true;
+bool should_i_sort = false;
+bool show_warning = false;
