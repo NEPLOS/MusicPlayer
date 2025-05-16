@@ -229,7 +229,7 @@ void RenderAddNewSongPage()
 
             std::filesystem::path somewhere_idk_im_losing_my_sanity_its_2AM_AHHHHHHH = input_str_path; // get the new music path
 
-            std::filesystem::path RM = "musics/"; // music folder
+            std::filesystem::path RM = fullHomePath + "musics/"; // music folder
 
             bool exist = false;
             int num = -1;
@@ -244,7 +244,7 @@ void RenderAddNewSongPage()
             }
 
 
-            std::string cheese_berger = "musics/" + somewhere_idk_im_losing_my_sanity_its_2AM_AHHHHHHH.filename().string(); // full path
+            std::string cheese_berger = fullHomePath + "musics/" + somewhere_idk_im_losing_my_sanity_its_2AM_AHHHHHHH.filename().string(); // full path
 
             Song new_song(cheese_berger,std::string(input_str_title),std::string(input_str_artist),(Genre)selected_genre); // create the song
 

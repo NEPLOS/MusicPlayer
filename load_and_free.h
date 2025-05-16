@@ -28,19 +28,19 @@ bool initializeSDL()
 void readFile()
 {
 
-    if (std::filesystem::exists("musics") && std::filesystem::is_directory("music"))
+    if (std::filesystem::exists( fullHomePath + "musics") && std::filesystem::is_directory( fullHomePath + "music"))
     {
-        std::filesystem::create_directory("musics");
+        std::filesystem::create_directory(fullHomePath + "musics");
         return;
     }
     
 
-    for (auto& entry : std::filesystem::directory_iterator("musics/")) 
+    for (auto& entry : std::filesystem::directory_iterator(fullHomePath + "musics/")) 
     {
-        std::cerr << "ni\n";
+        //std::cerr << "ni\n";
         if (entry.is_regular_file())
         {
-            std::cerr << "yepiiii\n";
+           // std::cerr << "yepiiii\n";
             Mix_Music* music = Mix_LoadMUS(entry.path().c_str());
 
             std::string music_title = Mix_GetMusicTitle(music);
@@ -68,25 +68,30 @@ void readFile()
     
 }
 
+std::string getFontPath(std::string path)
+{
+    return (fullHomePath + path);
+}
+
 void InItIconsAndFonts()
 {
 
-    titleFont = lf_load_font("fonts/1.ttf" , 35);
-    musicNameFont = lf_load_font("fonts/2.ttf" , 21);
-    smaller_musicNameFont = lf_load_font("fonts/2.ttf" , 18);
+    titleFont = lf_load_font( getFontPath("fonts/1.ttf").c_str() , 35);
+    musicNameFont = lf_load_font(getFontPath("fonts/2.ttf").c_str() , 21);
+    smaller_musicNameFont = lf_load_font(getFontPath("fonts/2.ttf").c_str() , 18);
 
-    pauseIcon = lf_load_texture("./icons/pause.png",true , LF_TEX_FILTER_LINEAR);
-    playIcon = lf_load_texture("./icons/play.png",true , LF_TEX_FILTER_LINEAR);
-    backIcon = lf_load_texture("./icons/back.png",true , LF_TEX_FILTER_LINEAR);
-    trashbinIcon = lf_load_texture("./icons/trashbin.png",true , LF_TEX_FILTER_LINEAR);
-    searchIcon = lf_load_texture("./icons/search.png",true , LF_TEX_FILTER_LINEAR);
-    previousIcon = lf_load_texture("./icons/previous.png",true,LF_TEX_FILTER_LINEAR);
-    nextIcon = lf_load_texture("./icons/next.png",true,LF_TEX_FILTER_LINEAR);
-    volumeIcon = lf_load_texture("./icons/volume.png",true,LF_TEX_FILTER_LINEAR);
-    muteIcon = lf_load_texture("./icons/mute.png",true,LF_TEX_FILTER_LINEAR);
-    shuffleIcon = lf_load_texture("./icons/shuffle.png",true,LF_TEX_FILTER_LINEAR);
-    loopIcon = lf_load_texture("./icons/loop.png",true,LF_TEX_FILTER_LINEAR);
-    loopOneIcon = lf_load_texture("./icons/loop_one.png",true,LF_TEX_FILTER_LINEAR);
+    pauseIcon = lf_load_texture   (getFontPath("icons/pause.png").c_str(),true , LF_TEX_FILTER_LINEAR);
+    playIcon = lf_load_texture    (getFontPath("icons/play.png").c_str(),true , LF_TEX_FILTER_LINEAR);
+    backIcon = lf_load_texture    (getFontPath("icons/back.png").c_str(),true , LF_TEX_FILTER_LINEAR);
+    trashbinIcon = lf_load_texture(getFontPath("icons/trashbin.png").c_str(),true , LF_TEX_FILTER_LINEAR);
+    searchIcon = lf_load_texture  (getFontPath("icons/search.png").c_str(),true , LF_TEX_FILTER_LINEAR);
+    previousIcon = lf_load_texture(getFontPath("icons/previous.png").c_str(),true,LF_TEX_FILTER_LINEAR);
+    nextIcon = lf_load_texture    (getFontPath("icons/next.png").c_str(),true,LF_TEX_FILTER_LINEAR);
+    volumeIcon = lf_load_texture  (getFontPath("icons/volume.png").c_str(),true,LF_TEX_FILTER_LINEAR);
+    muteIcon = lf_load_texture    (getFontPath("icons/mute.png").c_str(),true,LF_TEX_FILTER_LINEAR);
+    shuffleIcon = lf_load_texture (getFontPath("icons/shuffle.png").c_str(),true,LF_TEX_FILTER_LINEAR);
+    loopIcon = lf_load_texture    (getFontPath("icons/loop.png").c_str(),true,LF_TEX_FILTER_LINEAR);
+    loopOneIcon = lf_load_texture (getFontPath("icons/loop_one.png").c_str(),true,LF_TEX_FILTER_LINEAR);
 
     new_task_input_path.buf_size = 512;
     

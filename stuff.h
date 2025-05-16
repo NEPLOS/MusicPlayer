@@ -18,6 +18,8 @@ extern "C" {
 #define ONE_MUSIC 0
 #define ALL_MUSICS 1
 
+std::string fullHomePath = "";
+
 enum Tab
 {
     NONE = 0 ,
