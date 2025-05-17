@@ -760,7 +760,7 @@ void bottomPanel()
             }
 
             if (current == nullptr)
-             {
+            {
                 playing_song->song.loadAndplay();
             }
             

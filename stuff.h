@@ -6,7 +6,6 @@
 #include "Song.h"
 #include <filesystem>
 
-
 extern "C" {
     #include "leif/leif.h"
     #include <GLFW/glfw3.h>
@@ -89,6 +88,9 @@ Node* playing_song = nullptr;
 
 static bool is_mute = false;
 static int last_audio = MIX_MAX_VOLUME / 2;
+
+const int targetFPS = 60;
+const int frameDelay = 1000 / targetFPS;
 
 bool current_sort = true;
 

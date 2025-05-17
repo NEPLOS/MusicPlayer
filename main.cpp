@@ -1,5 +1,4 @@
 
-
 #include "gtk-3.0/gtk/gtk.h"
 #include "libayatana-appindicator3-0.1/libayatana-appindicator/app-indicator.h"
 
@@ -12,8 +11,19 @@
 #include <thread>
 #include <atomic>
 
+#include <csignal>
+
 std::atomic<bool> guiRunning(false);
 std::thread guiThread;
+
+std::atomic<bool> running(true);
+std::thread musicWatcherThread;
+
+void handle_exit_signal(int signum) 
+{
+    running = false;
+    gtk_main_quit();
+}
 
 void RenderGui()
 {
@@ -24,6 +34,7 @@ void RenderGui()
     window = glfwCreateWindow(width , hight , "ff" , NULL , NULL);
 
     glfwMakeContextCurrent(window);
+    glfwSwapInterval(1);
 
     lf_init_glfw(width , hight , window);
 
@@ -35,35 +46,57 @@ void RenderGui()
 
     while (glfwWindowShouldClose(window) == false)
     {
-        glClear(GL_COLOR_BUFFER_BIT);
-
-        glClearColor(0.07,0.07,0.07,0.07);
-
-        lf_begin();
-
-        switch (current_tab)
+        if (!glfwGetWindowAttrib(window, GLFW_ICONIFIED) && glfwGetWindowAttrib(window, GLFW_FOCUSED)) 
         {
-        case MAIN_PAGE:
-            RenderMainPage();
-            break;
-        case ADD_NEW_SONG:
-            RenderAddNewSongPage();
-            break;
-        default:
-            // for unexpected behaviour 
-            lf_text("something went wrong :(( ");
-            break;
+
+            glfwPollEvents();
+            glClear(GL_COLOR_BUFFER_BIT);
+
+            glClearColor(0.07,0.07,0.07,0.07);
+
+            lf_begin();
+
+            switch (current_tab)
+            {
+            case MAIN_PAGE:
+                RenderMainPage();
+                break;
+            case ADD_NEW_SONG:
+                RenderAddNewSongPage();
+                break;
+            default:
+                // for unexpected behaviour 
+                lf_text("something went wrong :(( ");
+                break;
+            }
+
+            lf_end();
+
+            glfwPollEvents();
+            glfwSwapBuffers(window);
+        } 
+        else 
+        {
+
+            SDL_Delay(100);
+            continue;
         }
-
-        lf_end();
-
-        glfwPollEvents();
-        glfwSwapBuffers(window);
 
     }
     glfwDestroyWindow(window);
     guiRunning = false;
 }
+
+void repeat_music() 
+{
+
+    if (loop_type == ONE_MUSIC)//(Mix_PlayingMusic() == 0) && (playing_song != nullptr) && (sound != nullptr) && Mix_Playing(-1) == 0) 
+    {
+        //SDL_Delay(200);
+        playing_song->song.loadAndplay();
+    }
+}
+
 
 static void on_show_gui(GtkMenuItem*, gpointer)
 {
@@ -103,12 +136,14 @@ int main()
 
     playlist = new DoubleLinkedList();
 
-
     srand(time(NULL));
 
     readFile();
 
     gtk_init(nullptr, nullptr);
+
+    signal(SIGINT, handle_exit_signal);
+    signal(SIGTERM, handle_exit_signal);
 
     AppIndicator* indicator = app_indicator_new(
         "ff-tray",
@@ -133,11 +168,19 @@ int main()
     app_indicator_set_status(indicator, APP_INDICATOR_STATUS_ACTIVE);
     app_indicator_set_menu(indicator, GTK_MENU(menu));
 
+    //musicWatcherThread = std::thread(MusicWatcherLoop);
+
+    Mix_HookMusicFinished(repeat_music);
+
     // reender GUI
     guiThread = std::thread(RenderGui);
     guiThread.detach();
 
     gtk_main();
+
+    running = false;
+    if (musicWatcherThread.joinable())
+        musicWatcherThread.join();
 
     // exit and free
     free_memory();
