@@ -100,11 +100,13 @@ void repeat_music()
     {
         if(playing_song->next != nullptr)
         {
+            playing_song->song.paused = true;
             playing_song = playing_song->next;
             playing_song->song.loadAndplay();
         }
         else
         {
+            playing_song->song.paused = true;
             playing_song = playlist->head;
             playing_song->song.loadAndplay();
         }
