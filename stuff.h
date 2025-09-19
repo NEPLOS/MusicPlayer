@@ -17,7 +17,7 @@ extern "C" {
 #define ONE_MUSIC 0
 #define ALL_MUSICS 1
 
-std::string fullHomePath = "";
+std::string fullHomePath = "/home/user/projects/MusicPlayer/";
 
 enum Tab
 {
@@ -26,6 +26,12 @@ enum Tab
     ADD_NEW_SONG = 2 ,
     EDIT_PAGE = 3
 
+};
+
+enum LoopMode
+{
+    LOOP_ALL,
+    LOOP_ONE
 };
 
 Genre Filter = All;
