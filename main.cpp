@@ -1,6 +1,4 @@
 
-#include "gtk-3.0/gtk/gtk.h"
-#include "libayatana-appindicator3-0.1/libayatana-appindicator/app-indicator.h"
 
 #include "stuff.h"
 #include "load_and_free.h"
@@ -206,8 +204,8 @@ int main()
     GtkWidget* change_loop_item = gtk_menu_item_new_with_label("Loop type");
     GtkWidget* change_loop_type_menu = gtk_menu_new();
 
-    GtkWidget* loop_all_item = gtk_radio_menu_item_new_with_label(nullptr, "Loop All");
-    GtkWidget* loop_one_item = gtk_radio_menu_item_new_with_label_from_widget(GTK_RADIO_MENU_ITEM(loop_all_item), "Loop One");
+    loop_all_item = gtk_radio_menu_item_new_with_label(nullptr, "Loop All");
+    loop_one_item = gtk_radio_menu_item_new_with_label_from_widget(GTK_RADIO_MENU_ITEM(loop_all_item), "Loop One");
 
     GtkWidget* quit_item = gtk_menu_item_new_with_label("Quit");
 

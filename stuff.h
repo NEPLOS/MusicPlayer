@@ -6,6 +6,9 @@
 #include "Song.h"
 #include <filesystem>
 
+#include "gtk-3.0/gtk/gtk.h"
+#include "libayatana-appindicator3-0.1/libayatana-appindicator/app-indicator.h"
+
 extern "C" {
     #include "leif/leif.h"
     #include <GLFW/glfw3.h>
@@ -33,6 +36,9 @@ enum LoopMode
     LOOP_ALL,
     LOOP_ONE
 };
+
+GtkWidget* loop_all_item;
+GtkWidget* loop_one_item;
 
 Genre Filter = All;
 

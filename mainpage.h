@@ -793,6 +793,8 @@ void bottomPanel()
             if (lf_image_button(((LfTexture){.id = loopIcon.id , 24 , 24})) == LF_CLICKED)
             {   
                 loop_type = !loop_type;
+                gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(loop_one_item), TRUE);
+                
             }
         }
         else
@@ -800,6 +802,7 @@ void bottomPanel()
             if (lf_image_button(((LfTexture){.id = loopOneIcon.id , 24 , 24})) == LF_CLICKED)
             {   
                 loop_type = !loop_type;
+                gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(loop_all_item), TRUE);
             }
         }
 
