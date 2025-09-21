@@ -128,7 +128,6 @@ void DoubleLinkedList::removeSonge_by_name(std::string song_name)
 
         if (current->song.song_name == song_name)
         {
-
             if (current == head)
             {
                 head = head->next;

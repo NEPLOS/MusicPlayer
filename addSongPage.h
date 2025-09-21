@@ -177,8 +177,6 @@ void RenderAddNewSongPage()
 
     lf_next_line();
 
-    static int selected_genre = -1;
-
     static const char* items[] = {"music" , "pop" , "hip-hop" , "k-pop" , "rock" , "chill" , "country" , "metal"}; // selection box (combo box) for genre
 
     {
@@ -296,6 +294,16 @@ void RenderAddNewSongPage()
         if (lf_image_button(((LfTexture){.id = backIcon.id , 28 , 32})) == LF_CLICKED)
         {
             current_tab = MAIN_PAGE;
+            selected_genre = -1;
+            memset(input_str_title, 0, sizeof(input_str_title));
+            memset(input_str_path, 0, sizeof(input_str_path));
+            memset(input_str_artist, 0, sizeof(input_str_artist));
+            new_task_input_artist.cursor_index = 0;
+            new_task_input_path.cursor_index = 0;
+            new_task_input_title.cursor_index = 0;
+            lf_input_field_unselect_all(&new_task_input_artist);
+            lf_input_field_unselect_all(&new_task_input_path);
+            lf_input_field_unselect_all(&new_task_input_title);
         }
         lf_pop_style_props();
     }

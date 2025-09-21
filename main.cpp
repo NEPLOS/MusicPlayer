@@ -22,6 +22,104 @@ void handle_exit_signal(int signum)
     gtk_main_quit();
 }
 
+bool hasMp3Extension(std::string filename) 
+{
+    if (filename.size() < 4) 
+        return false;
+    
+    std::string ext = filename.substr(filename.size() - 4);
+    std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
+    
+    return ext == ".mp3";
+}
+
+void dropCallback(GLFWwindow* window, int count, const char** paths)
+{
+ 
+    std::string musicPath = paths[0];
+
+    if (!hasMp3Extension(musicPath))
+        return;
+
+    if (current_tab == ADD_NEW_SONG)
+    {
+        Mix_Music* music = Mix_LoadMUS(musicPath.c_str());
+        selected_genre = 0;
+
+        std::string music_title = Mix_GetMusicTitle(music);
+        std::string music_artist = Mix_GetMusicArtistTag(music);     
+        
+        renderUiEmergency = true;
+
+        strcpy(input_str_path , musicPath.c_str());
+        strcpy(input_str_artist, music_artist.c_str());
+        strcpy(input_str_title , music_title.c_str());
+
+        Mix_FreeMusic(music);
+        
+    }
+    else
+    {
+        std::filesystem::path RM = fullHomePath + "musics/";
+        std::filesystem::path musicPathPath = musicPath;
+
+        if(std::filesystem::exists(RM / musicPathPath.filename()) == false)
+            std::filesystem::copy(musicPath , RM / musicPathPath.filename());
+        else
+        {
+            std::cout << "file already exist\n";
+            show_warning = true;
+            return;
+        }
+
+        std::string cheese_berger = fullHomePath + "musics/" + musicPathPath.filename().string();
+
+        Mix_Music* music = Mix_LoadMUS(musicPath.c_str());
+
+        std::string music_title = Mix_GetMusicTitle(music);
+        std::string music_artist = Mix_GetMusicArtistTag(music);     
+
+        Mix_FreeMusic(music);
+
+        Song new_song(cheese_berger,music_title,music_artist,(Genre)(0));
+
+        if(!(playlist->addSong(new_song)))
+        {
+            std::cerr << "failed to add music\n";
+            show_warning = true;
+            std::filesystem::remove(RM / musicPathPath.filename());
+            return;
+        }
+        else
+        {
+
+            if (playing_song == nullptr)
+            {
+                playing_song = playlist->head;
+            }
+            else if(playing_song->song.paused == false)
+            {
+                playing_song->song.pauseMusic();
+            }
+            
+
+            while (playing_song->next != nullptr)
+            {
+                playing_song = playing_song->next;
+            }
+            
+            playing_song->song.loadAndplay();
+
+            renderUiEmergency = true;
+        }
+
+        
+
+    }
+    
+}
+
+
 // renders GUI
 void RenderGui()
 {
@@ -30,6 +128,8 @@ void RenderGui()
     glfwInit();
 
     window = glfwCreateWindow(width , hight , "ff" , NULL , NULL);
+
+    glfwSetDropCallback(window, dropCallback);
 
     glfwMakeContextCurrent(window);
     glfwSwapInterval(1);
@@ -44,10 +144,10 @@ void RenderGui()
 
     while (glfwWindowShouldClose(window) == false)
     {
-        if (!glfwGetWindowAttrib(window, GLFW_ICONIFIED) && glfwGetWindowAttrib(window, GLFW_FOCUSED)) 
+        glfwPollEvents();
+        if ((!glfwGetWindowAttrib(window, GLFW_ICONIFIED) && glfwGetWindowAttrib(window, GLFW_FOCUSED)) || renderUiEmergency) 
         {
-
-            glfwPollEvents();
+            renderUiEmergency = false;
             glClear(GL_COLOR_BUFFER_BIT);
 
             glClearColor(0.07,0.07,0.07,0.07);
@@ -84,6 +184,7 @@ void RenderGui()
     glfwDestroyWindow(window);
     guiRunning = false;
 }
+
 
 // ummmm yeah....
 void repeat_music() 
@@ -238,10 +339,11 @@ int main()
 
     Mix_HookMusicFinished(repeat_music);
 
+    
     // reender GUI
     guiThread = std::thread(RenderGui);
     guiThread.detach();
-
+    
     gtk_main();
 
     running = false;

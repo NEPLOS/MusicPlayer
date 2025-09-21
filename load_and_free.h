@@ -24,6 +24,7 @@ bool initializeSDL()
     return true;
 }
 
+
 // read the musics and then sort them all from the file (at the start)
 void readFile()
 {

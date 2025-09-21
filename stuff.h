@@ -53,6 +53,8 @@ enum Genre;
 
 GLFWwindow* window;
 
+bool canIjoin = true;
+
 static LfFont titleFont;
 static LfFont musicNameFont;
 static LfFont smaller_musicNameFont;
@@ -95,6 +97,10 @@ static LfTexture muteIcon;
 static LfTexture shuffleIcon;
 static LfTexture loopIcon;
 static LfTexture loopOneIcon;
+
+static int selected_genre = -1;
+
+static bool renderUiEmergency = false;
 
 Node* playing_song = nullptr;
 

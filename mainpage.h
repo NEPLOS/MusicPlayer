@@ -228,6 +228,8 @@ void sidePanel()
 
         return;
     }
+
+starterLable:
     
     Node* current = playlist->head;
 
@@ -429,6 +431,11 @@ void sidePanel()
 
         // remove music logic
         {
+
+            // something is happening here and i don't know the reason
+            // i added goto to fix the seg faults for now
+            // i'll come back to it later
+
             LfUIElementProps props = lf_get_theme().button_props;
             props.margin_left = 3;
             props.color = LF_NO_COLOR;
@@ -455,6 +462,7 @@ void sidePanel()
                         space_key = true;
                     }
                 }
+                goto starterLable;
                 
                 
             }
